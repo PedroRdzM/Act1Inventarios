@@ -48,17 +48,15 @@
                     <tr class="bg-success">
 
                         <th>Producto</th>
-                        <th>Precio (USD$)</th>
+                        <th>Precio (Mxn$)</th>
                         <th>Cantidad</th>
-                        <th>SubTotal (USD$)</th>
+                        <th>SubTotal (Mxn$)</th>
                     </tr>
                 </thead>
                  
                 <tfoot>
                   
-                   <!--<th><h2>TOTAL</h2></th>
-                   <th></th>
-                   <th></th>
+                
                    <th><h4 id="total">${{$compra->total}}</h4></th>-->
 
                     <tr>

@@ -18,7 +18,7 @@ class CreateComprasTable extends Migration
             $table->integer('idproveedor')->unsigned();
             $table->foreign('idproveedor')->references('id')->on('proveedores');
             $table->integer('idusuario')->unsigned();
-            $table->foreign('idusuario')->references('id')->on('users');
+            $table->foreign('idusuario')->references('id')->on('users');//fk para el usuario que realice la compra
             $table->string('tipo_identificacion', 20);
             $table->string('num_compra', 10);
             $table->dateTime('fecha_compra');

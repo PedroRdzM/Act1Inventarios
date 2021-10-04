@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('producto', 'App\Http\Controllers\ProductoController');
         Route::resource('proveedor', 'App\Http\Controllers\ProveedorController');
         Route::resource('compra', 'App\Http\Controllers\CompraController');
+        Route::get('/pdfCompra/{id}', 'App\Http\Controllers\CompraController@pdf')->name('compra_pdf');
           
     
     });
@@ -44,6 +45,8 @@ Route::group(['middleware' => ['auth']], function () {
          Route::resource('producto', 'App\Http\Controllers\ProductoController');
          Route::resource('cliente', 'App\Http\Controllers\ClienteController');
          Route::resource('venta', 'App\Http\Controllers\VentaController');
+         Route::get('/pdfVenta/{id}', 'App\Http\Controllers\VentaController@pdf')->name('Venta_pdf');
+         
          
          
     });
@@ -58,6 +61,10 @@ Route::group(['middleware' => ['auth']], function () {
       Route::resource('user', 'App\Http\Controllers\UserController');
       Route::resource('compra', 'App\Http\Controllers\CompraController');
       Route::resource('venta', 'App\Http\Controllers\VentaController');
+      Route::get('/pdfCompra/{id}', 'App\Http\Controllers\CompraController@pdf')->name('compra_pdf');
+      Route::get('/pdfVenta/{id}', 'App\Http\Controllers\VentaController@pdf')->name('venta_pdf');
+
+
 	    
     
     });

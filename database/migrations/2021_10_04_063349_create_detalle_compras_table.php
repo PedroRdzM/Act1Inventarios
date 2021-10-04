@@ -16,7 +16,7 @@ class CreateDetalleComprasTable extends Migration
         Schema::create('detalle_compras', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('idcompra')->unsigned();
-            $table->foreign('idcompra')->references('id')->on('compras')->onDelete('cascade');
+            $table->foreign('idcompra')->references('id')->on('compras')->onDelete('cascade');//para cuando eliminemos la compra se elimine le detalle compra
             $table->integer('idproducto')->unsigned();
             $table->foreign('idproducto')->references('id')->on('productos');
             $table->integer('cantidad');

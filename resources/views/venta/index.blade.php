@@ -3,7 +3,7 @@
 <main class="main">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="/">SISTEMA DE COMPRAS - VENTAS</a></li>
+                <li class="breadcrumb-item active"><a href="/">SISTEMA DE COMPRAS - VENTAS E INVENTARIO</a></li>
             </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
@@ -44,7 +44,7 @@
                                     <th>Cliente</th>
                                     <th>Tipo de identificación</th>
                                     <th>Vendedor</th>
-                                    <th>Total (USD$)</th>
+                                    <th>Total (Mxn$)</th>
                                     <th>Impuesto</th>
                                     <th>Estado</th>
                                     <th>Cambiar Estado</th>
@@ -114,7 +114,7 @@
 
                                     <td>
                                        
-                                        <a href="{{url('pdfVenta',$vent->id)}}" target="_blank">
+                                        <a href="{{url('App\Http\Controllers\pdfVenta',$vent->id)}}" target="_blank">
                                            
                                            <button type="button" class="btn btn-info btn-sm">
                                             

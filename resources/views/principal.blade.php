@@ -35,7 +35,7 @@
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                    <imgsrc="{{asset('public/img/usuario'.Auth::user()->imagen)}}" class="img-avatar" alt="admin@bootstrapmaster.com">
+                    <img src="{{asset('public/storage/img/usuario'.Auth::user()->imagen)}}" class="img-avatar" alt="">
                     <span class="d-md-down-none">{{Auth::user()->usuario}}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
@@ -75,8 +75,9 @@
     </div>   
 
    
-    <!-- Bootstrap and necessary plugins -->
-    <script src="{{asset('js/jquery.min.js')}}"></script>
+  <!-- Bootstrap and necessary plugins -->
+  <script src="{{asset('js/jquery.min.js')}}"></script>
+    @stack('scripts')
     <script src="{{asset('js/popper.min.js')}}"></script>
     <script src="{{asset('js/bootstrap.min.js')}}"></script>
     <script src="{{asset('js/pace.min.js')}}"></script>
@@ -254,20 +255,34 @@
         /*FIN ventana modal para cambiar estado del usuario*/
 
  /*INICIO ventana modal para cambiar estado de Compra*/
-        
+        //refencia al div que tiene l boton del estadp de la compra
         $('#cambiarEstadoCompra').on('show.bs.modal', function (event) {
        
-       //console.log('modal abierto');
+      
        
        var button = $(event.relatedTarget) 
-       var id_compra = button.data('id_compra')
+       var id_compra = button.data('id_compra')//cargamos al id de la compra compra
        var modal = $(this)
-       // modal.find('.modal-title').text('New message to ' + recipient)
        
-       modal.find('.modal-body #id_compra').val(id_compra);
+       
+       modal.find('.modal-body #id_compra').val(id_compra);//busca el campo oculto donde esta #id_compra
        })
         
        /*FIN ventana modal para cambiar estado de la compra*/
+
+       /*INICIO ventana modal para cambiar estado de Venta*/
+        
+       $('#cambiarEstadoVenta').on('show.bs.modal', function (event) {    
+        
+        var button = $(event.relatedTarget) 
+        var id_venta = button.data('id_venta')
+        var modal = $(this)
+        
+        modal.find('.modal-body #id_venta').val(id_venta);
+        })
+         
+        /*FIN ventana modal para cambiar estado de la venta*/
+    
 
 
     </script>

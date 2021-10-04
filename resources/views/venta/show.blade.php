@@ -48,20 +48,16 @@
                     <tr class="bg-success">
 
                         <th>Producto</th>
-                        <th>Precio Venta (USD$)</th>
-                        <th>Descuento (USD$)</th>
+                        <th>Precio Venta (Mxn$)</th>
+                        <th>Descuento (Mxn$)</th>
                         <th>Cantidad</th>
-                        <th>SubTotal (USD$)</th>
+                        <th>SubTotal (Mxn$)</th>
                     </tr>
                 </thead>
                  
                 <tfoot>
                    
-                   <!--<th><h2>TOTAL</h2></th>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-                   <th><h4 id="total">{{$venta->total}}</h4></th>-->
+                  
                    <tr>
                         <th  colspan="4"><p align="right">TOTAL:</p></th>
                         <th><p align="right">${{number_format($venta->total,2)}}</p></th>

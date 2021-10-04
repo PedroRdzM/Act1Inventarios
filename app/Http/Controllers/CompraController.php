@@ -16,7 +16,7 @@ class CompraController extends Controller
         if($request){
         //para mostrar el estado de las compras 
             $sql=trim($request->get('buscarTexto'));
-            //con el join relacionamos los proveedores, user y detalle de compras 
+            //Creamos el objeto del modelo Compras, con el join relacionamos los proveedores, user y detalle de compras 
             $compras=Compra::join('proveedores','compras.idproveedor','=','proveedores.id')
             ->join('users','compras.idusuario','=','users.id')
             ->join('detalle_compras','compras.id','=','detalle_compras.idcompra')
@@ -25,7 +25,7 @@ class CompraController extends Controller
              'compras.num_compra','compras.fecha_compra','compras.impuesto',
              'compras.estado','compras.total','proveedores.nombre as proveedor','users.nombre')
             ->where('compras.num_compra','LIKE','%'.$sql.'%')
-            ->orderBy('compras.id','desc')
+            ->orderBy('compras.id','desc')//ordenamas de forma desendente 
             ->groupBy('compras.id','compras.tipo_identificacion',
             'compras.num_compra','compras.fecha_compra','compras.impuesto',
             'compras.estado','compras.total','proveedores.nombre','users.nombre')
@@ -33,6 +33,7 @@ class CompraController extends Controller
              
             //retorna la vista compras.index y le asignamos el parametro compras
             return view('compra.index',["compras"=>$compras,"buscarTexto"=>$sql]);
+            
             
         }
       
@@ -44,11 +45,11 @@ class CompraController extends Controller
              /*listar las proveedores en ventana modal*/
              $proveedores=DB::table('proveedores')->get();//llamamos a la tabla proveedores y enlista
             
-             /*listar los productos en ventana modal*/
+             //listar los productos en ventana modal
              $productos=DB::table('productos as prod')
              ->select(DB::raw('CONCAT(prod.codigo," ",prod.nombre) AS producto'),'prod.id')//concatenamos el codigo y nombre del producto y lo muestra como producto
-             ->where('prod.condicion','=','1')->get(); //se mustran los productos que esten activados
-            //
+             ->where('prod.condicion','=','1')->get(); //se mustran los productos que esten activados, que su condicion sea 1
+            //retorna la vista a la plantilla 'create' para hacer el registrp de una compra
              return view('compra.create',["proveedores"=>$proveedores,"productos"=>$productos]);
   
         }
@@ -56,15 +57,15 @@ class CompraController extends Controller
          public function store(Request $request){
          
          
- 
+            
              try{
- 
+                //clase que nos permite hacer transacciones
                  DB::beginTransaction();
-                //toma la fecha y hora
+                //toma la fecha y hora deacuerdo a la zona 
                  $mytime= Carbon::now('America/Monterrey');
                 //declaramos un objeto compra del modelo compra y llenamos los campos
-                 $compra = new Compra();
-                 $compra->idproveedor = $request->id_proveedor;
+                 $compra = new Compra();//declaramos objeto compra  del modelo compra
+                 $compra->idproveedor = $request->id_proveedor;//
                  $compra->idusuario = \Auth::user()->id;//el id del usuario se toma del que este log en ese momento
                  $compra->tipo_identificacion = $request->tipo_identificacion;
                  $compra->num_compra = $request->num_compra;
@@ -72,8 +73,8 @@ class CompraController extends Controller
                  $compra->impuesto = '0.20';
                  $compra->total = $request->total_pagar;
                  $compra->estado = 'Registrado';
-                 $compra->save();
-                //se toma de la vista 
+                 $compra->save();//guardamos
+                //se toma de la vista y se les asigna a las variables
                  $id_producto=$request->id_producto;
                  $cantidad=$request->cantidad;
                  $precio=$request->precio_compra;
@@ -88,10 +89,10 @@ class CompraController extends Controller
                      /*enviamos valores a las propiedades del objeto detalle*/
                      /*al idcompra del objeto detalle le envio el id del objeto compra, que es el objeto que se ingresó en la tabla compras de la bd*/
                      $detalle->idcompra = $compra->id;//se asigna el id de compra 
-                     $detalle->idproducto = $id_producto[$cont];
-                     $detalle->cantidad = $cantidad[$cont];
-                     $detalle->precio = $precio[$cont];    
-                     $detalle->save();
+                     $detalle->idproducto = $id_producto[$cont];//asigna id del producto
+                     $detalle->cantidad = $cantidad[$cont];//obtenemos la cantidad a comprar del producto
+                     $detalle->precio = $precio[$cont];    //obtenemos el precio del producto
+                     $detalle->save();//guardamos
                      $cont=$cont+1;
                  }
                      
@@ -122,7 +123,7 @@ class CompraController extends Controller
              'compras.estado','proveedores.nombre')
              ->first();
  
-             /*mostrar detalles de la compra */
+             /*mostrar detalles de la compra, con el join accedemos a los productos  y detalles de la compra */
              $detalles = DetalleCompra::join('productos','detalle_compras.idproducto','=','productos.id')
              ->select('detalle_compras.cantidad','detalle_compras.precio','productos.nombre as producto')
              ->where('detalle_compras.idcompra','=',$id)//
@@ -130,7 +131,7 @@ class CompraController extends Controller
              //retornamos a la vista compra.shows
              return view('compra.show',['compra' => $compra,'detalles' =>$detalles]);
          }
-         //metodo que permite anular una compra
+         //metodo que permite anular una compra 
          public function destroy(Request $request){
  
 
@@ -141,33 +142,33 @@ class CompraController extends Controller
  
      }
  
-         public function pdf(Request $request,$id){
-         
+         public function pdf(Request $request,$id){//se asocia al id de la compra
+            
              $compra = Compra::join('proveedores','compras.idproveedor','=','proveedores.id')
-             ->join('users','compras.idusuario','=','users.id')
-             ->join('detalle_compras','compras.id','=','detalle_compras.idcompra')
+             ->join('users','compras.idusuario','=','users.id')//relacionamos la tabla compras con la tabal users
+             ->join('detalle_compras','compras.id','=','detalle_compras.idcompra')//relacionamos con la tabla detallecompras
              ->select('compras.id','compras.tipo_identificacion',
              'compras.num_compra','compras.created_at','compras.impuesto',DB::raw('sum(detalle_compras.cantidad*precio) as total'),
              'compras.estado','proveedores.nombre','proveedores.tipo_documento','proveedores.num_documento',
-             'proveedores.direccion','proveedores.email','proveedores.telefono','users.usuario')
-             ->where('compras.id','=',$id)
+             'proveedores.direccion','proveedores.email','proveedores.telefono','users.usuario')//Seleccionamos los campos a mostrar
+             ->where('compras.id','=',$id)//filtramos por el id que toma el recorrido al mostrar las compras
              ->orderBy('compras.id', 'desc')
              ->groupBy('compras.id','compras.tipo_identificacion',
              'compras.num_compra','compras.created_at','compras.impuesto',
              'compras.estado','proveedores.nombre','proveedores.tipo_documento','proveedores.num_documento',
              'proveedores.direccion','proveedores.email','proveedores.telefono','users.usuario')
-             ->take(1)->get();
+             ->take(1)->get();//tomamos 1 y lo listamos
  
              $detalles = DetalleCompra::join('productos','detalle_compras.idproducto','=','productos.id')
              ->select('detalle_compras.cantidad','detalle_compras.precio',
-             'productos.nombre as producto')
-             ->where('detalle_compras.idcompra','=',$id)
-             ->orderBy('detalle_compras.id', 'desc')->get();
- 
+             'productos.nombre as producto')//relacionamos productos con detalle_compras
+             ->where('detalle_compras.idcompra','=',$id)//mostramos deacuerdo al id del registro
+             ->orderBy('detalle_compras.id', 'desc')->get();//obtenemos el registro y lo listamos
+            //seleccionamos el numero de compra con el id y se guarda en la variable numcompra
              $numcompra=Compra::select('num_compra')->where('id',$id)->get();
-             
+             //decalramos pdf de clase pdf traemos las variables de compra y detalles
              $pdf= \PDF::loadView('pdf.compra',['compra'=>$compra,'detalles'=>$detalles]);
-             return $pdf->download('compra-'.$numcompra[0]->num_compra.'.pdf');
+             return $pdf->download('compra-'.$numcompra[0]->num_compra.'.pdf');//retornamos el pdf para descargarlo
          }
  
 }

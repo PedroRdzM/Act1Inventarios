@@ -1,9 +1,10 @@
+<!-- Extencion de la plantilla principal -->
 @extends('principal')
 @section('contenido')
 <main class="main">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="/">BACKEND - SISTEMA DE COMPRAS - VENTAS</a></li>
+                <li class="breadcrumb-item active"><a href="/">SISTEMA DE COMPRAS - VENTAS</a></li>
             </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
@@ -11,7 +12,7 @@
                     <div class="card-header">
 
                        <h2>Listado de Compras</h2><br/>
-                       
+                       <!-- redirige a la plantilla de create -->
                        <a href="compra/create">
 
                         <button class="btn btn-primary btn-lg" type="button">
@@ -27,7 +28,7 @@
                             <div class="col-md-6">
                             {!! Form::open(array('url'=>'compra','method'=>'GET','autocomplete'=>'off','role'=>'search')) !!} 
                                 <div class="input-group">
-                                   
+                                   <!-- barra para el buscador -->
                                     <input type="text" name="buscarTexto" class="form-control" placeholder="Buscar texto" value="{{$buscarTexto}}">
                                     <button type="submit"  class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
@@ -37,14 +38,14 @@
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
                                 <tr class="bg-primary">
-                                    
+                                    <!-- titulos de la tabla -->
                                     <th>Ver Detalle</th>
                                     <th>Fecha Compra</th>
                                     <th>Número Compra</th>
                                     <th>Proveedor</th>
                                     <th>Tipo de identificación</th>
                                     <th>Comprador</th> 
-                                    <th>Total (USD$)</th>
+                                    <th>Total (Mxn$)</th>
                                     <th>Impuesto</th>
                                     <th>Estado</th>
                                     <th>Cambiar Estado</th>
@@ -53,13 +54,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                                <!-- Breadcrumla variable compras tiene los regoistros y se almacena en comp -->
                               @foreach($compras as $comp)
                                
                                 <tr>
                                     <td>
-                                     
-                                     <a href="{{URL::action('CompraController@show',$comp->id)}}">
+                                     <!-- reedirecciona al metodo show situado en comptacontroller y vemos el detalle -->
+                                     <a href="{{URL::action('App\Http\Controllers\CompraController@show',$comp->id)}}">
                                        <button type="button" class="btn btn-warning btn-md">
                                          <i class="fa fa-eye fa-2x"></i> Ver detalle
                                        </button> &nbsp;
@@ -72,10 +73,10 @@
                                     <td>{{$comp->proveedor}}</td>
                                     <td>{{$comp->tipo_identificacion}}</td>
                                     <td>{{$comp->nombre}}</td>
-                                    <td>${{number_format($comp->total,2)}}</td>
+                                    <td>${{number_format($comp->total,2)}}</td><!-- number_format para  convertir a 2 decimales -->
                                     <td>{{$comp->impuesto}}</td>
                                     <td>
-                                      
+                                      <!-- si el estado es igual a registrado aparece el boton registrado, si nno, aparecera anulado-->
                                       @if($comp->estado=="Registrado")
                                         <button type="button" class="btn btn-success btn-md">
                                     
@@ -97,9 +98,9 @@
                                     <td>
 
                             
-
+                                            <!-- si el estado es registado podemos anular la compra -->
                                             @if($comp->estado=="Registrado")
-
+                                                                                        <!-- se llama al id de la compra para abrir la ventana de confirmacion -->
                                                 <button type="button" class="btn btn-danger btn-sm" data-id_compra="{{$comp->id}}" data-toggle="modal" data-target="#cambiarEstadoCompra">
                                                     <i class="fa fa-times fa-2x"></i> Anular Compra
                                                 </button>
@@ -151,7 +152,7 @@
                               <span aria-hidden="true">×</span>
                             </button>
                         </div>
-
+                        <!-- llama al metodo destroy en compra controller para anular la compra -->
                     <div class="modal-body">
                         <form action="{{route('compra.destroy','test')}}" method="POST">
                           {{method_field('delete')}}

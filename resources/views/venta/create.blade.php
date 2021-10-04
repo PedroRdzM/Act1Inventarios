@@ -11,7 +11,7 @@
  <span><strong>(*) Campo obligatorio</strong></span><br/>
 
  <h3 class="text-center">LLenar el formulario</h3>
-
+    <!--llamada del metodo store-->
     <form action="{{route('venta.store')}}" method="POST">
     {{csrf_field()}}
 
@@ -20,7 +20,7 @@
             <div class="col-md-8">  
 
                 <label class="form-control-label" for="nombre">Nombre del Cliente</label>
-                
+                    <!--listado de cliemtes, se toma su id-->
                     <select class="form-control selectpicker" name="id_cliente" id="id_cliente" data-live-search="true" required>
                                                     
                     <option value="0" disabled>Seleccione</option>
@@ -37,7 +37,7 @@
             </div>
 
             <div class="form-group row">
-
+                    <!--seccion para seleccionar el tipo de documento-->
                 <div class="col-md-8">  
 
                         <label class="form-control-label" for="documento">Documento</label>
@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-
+            <!--seccion para agregar el numero de la venta-->
             <div class="form-group row">
 
                 <div class="col-md-8">
@@ -64,7 +64,7 @@
             </div>
 
             <br/><br/>
-
+                        <!--seccion para escoger el producto-->
             <div class="form-group row border">
 
                  <div class="col-md-8">  
@@ -74,9 +74,9 @@
                             <select class="form-control selectpicker" name="id_producto" id="id_producto" data-live-search="true" required>
                                                             
                             <option value="0" selected>Seleccione</option>
-                            
+                            <!--ciclo para listar los productos -->
                             @foreach($productos as $prod)
-                            
+                                <!--los productos son enviados  del metodo create mustra el codigo y el nombre del producto concatenados-->
                             <option value="{{$prod->id}}_{{$prod->stock}}_{{$prod->precio_venta}}">{{$prod->producto}}</option>
                                     
                             @endforeach
@@ -133,34 +133,29 @@
                     <tr class="bg-success">
                         <th>Eliminar</th>
                         <th>Producto</th>
-                        <th>Precio Venta (USD$)</th>
+                        <th>Precio Venta (Mxn$)</th>
                         <th>Descuento</th>
                         <th>Cantidad</th>
-                        <th>SubTotal (USD$)</th>
+                        <th>SubTotal (Mxn$)</th>
                     </tr>
                 </thead>
                  
                 <tfoot>
-                   <!--<th>Total</th>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-                   <th></th>
-                   <th><h4 id="total">USD$ 0.00</h4><input type="hidden" name="total_venta" id="total_venta">  </th>-->
+                   
 
                     <tr>
                         <th  colspan="5"><p align="right">TOTAL:</p></th>
-                        <th><p align="right"><span id="total">USD$ 0.00</span> </p></th>
+                        <th><p align="right"><span id="total">Mxn$ 0.00</span> </p></th>
                     </tr>
 
                     <tr>
                         <th colspan="5"><p align="right">TOTAL IMPUESTO (20%):</p></th>
-                        <th><p align="right"><span id="total_impuesto">USD$ 0.00</span></p></th>
+                        <th><p align="right"><span id="total_impuesto">MXn$ 0.00</span></p></th>
                     </tr>
 
                     <tr>
                         <th  colspan="5"><p align="right">TOTAL PAGAR:</p></th>
-                        <th><p align="right"><span align="right" id="total_pagar_html">USD$ 0.00</span> <input type="hidden" name="total_pagar" id="total_pagar"></p></th>
+                        <th><p align="right"><span align="right" id="total_pagar_html">Mxn$ 0.00</span> <input type="hidden" name="total_pagar" id="total_pagar"></p></th>
                     </tr>  
 
                 </tfoot>
@@ -232,18 +227,13 @@
 
                 if(parseInt(stock)>=parseInt(cantidad)){
                     
-                    /*subtotal[cont]=(cantidad*precio_venta)-descuento;
-                    total= total+subtotal[cont];*/
-
                     subtotal[cont]=(cantidad*precio_venta)-(cantidad*precio_venta*descuento/100);
                     total= total+subtotal[cont];
 
                     var fila= '<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-danger btn-sm" onclick="eliminar('+cont+');"><i class="fa fa-times fa-2x"></i></button></td> <td><input type="hidden" name="id_producto[]" value="'+id_producto+'">'+producto+'</td> <td><input type="number" name="precio_venta[]" value="'+parseFloat(precio_venta).toFixed(2)+'"> </td> <td><input type="number" name="descuento[]" value="'+parseFloat(descuento).toFixed(2)+'"> </td> <td><input type="number" name="cantidad[]" value="'+cantidad+'"> </td> <td>$'+parseFloat(subtotal[cont]).toFixed(2)+'</td></tr>';
                     cont++;
                     limpiar();
-                    totales();
-                    /*$("#total").html("USD$ " + total.toFixed(2));
-                    $("#total_venta").val(total.toFixed(2));*/   
+                    totales();  
                     evaluar();
                     $('#detalles').append(fila);
 
@@ -253,7 +243,7 @@
                 
                     Swal.fire({
                     type: 'error',
-                    //title: 'Oops...',
+                    
                     text: 'La cantidad a vender supera el stock',
                 
                     })
@@ -265,7 +255,7 @@
            
                 Swal.fire({
                 type: 'error',
-                //title: 'Oops...',
+              
                 text: 'Rellene todos los campos del detalle de la venta',
               
                 })
@@ -285,13 +275,13 @@
 
      function totales(){
 
-        $("#total").html("USD$ " + total.toFixed(2));
-        //$("#total_venta").val(total.toFixed(2));
+        $("#total").html("Mnx$ " + total.toFixed(2));
+    
 
         total_impuesto=total*impuesto/100;
         total_pagar=total+total_impuesto;
-        $("#total_impuesto").html("USD$ " + total_impuesto.toFixed(2));
-        $("#total_pagar_html").html("USD$ " + total_pagar.toFixed(2));
+        $("#total_impuesto").html("Mnx$ " + total_impuesto.toFixed(2));
+        $("#total_pagar_html").html("Mxn$ " + total_pagar.toFixed(2));
         $("#total_pagar").val(total_pagar.toFixed(2));
       }
 
@@ -314,9 +304,9 @@
         total_impuesto= total*20/100;
         total_pagar_html = total + total_impuesto;
 
-        $("#total").html("USD$" + total);
-        $("#total_impuesto").html("USD$" + total_impuesto);
-        $("#total_pagar_html").html("USD$" + total_pagar_html);
+        $("#total").html("Mxn$" + total);
+        $("#total_impuesto").html("Mxn$" + total_impuesto);
+        $("#total_pagar_html").html("Mxn$" + total_pagar_html);
         $("#total_pagar").val(total_pagar_html.toFixed(2));
         
         $("#fila" + index).remove();

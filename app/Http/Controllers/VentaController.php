@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Venta;
+use App\Models\DetalleVenta;
 use Illuminate\Support\Facades\Redirect;
+use Carbon\Carbon;
 use DB;
 
 class VentaController extends Controller
@@ -14,7 +16,7 @@ class VentaController extends Controller
         if($request){
  
             $sql=trim($request->get('buscarTexto'));
-            $ventas=Venta::join('clientes','ventas.idcliente','=','clientes.id')
+            $ventas=Venta::join('clientes','ventas.idcliente','=','clientes.id')//join con la tabla clientes y con la de users
             ->join('users','ventas.idusuario','=','users.id')
             ->join('detalle_ventas','ventas.id','=','detalle_ventas.idventa')
              ->select('ventas.id','ventas.tipo_identificacion',
@@ -25,11 +27,11 @@ class VentaController extends Controller
             ->groupBy('ventas.id','ventas.tipo_identificacion',
             'ventas.num_venta','ventas.fecha_venta','ventas.impuesto',
             'ventas.estado','ventas.total','clientes.nombre','users.nombre')
-            ->paginate(8);
+            ->paginate(10);
              
- 
+            //reedirige a la vista de ventas.index
             return view('venta.index',["ventas"=>$ventas,"buscarTexto"=>$sql]);
-           
+            
         }
       
  
@@ -44,8 +46,8 @@ class VentaController extends Controller
              $productos=DB::table('productos as prod')
              ->join('detalle_compras','prod.id','=','detalle_compras.idproducto')
              ->select(DB::raw('CONCAT(prod.codigo," ",prod.nombre) AS producto'),'prod.id','prod.stock','prod.precio_venta')
-             ->where('prod.condicion','=','1')
-             ->where('prod.stock','>','0')
+             ->where('prod.condicion','=','1')//productos que esten activados
+             ->where('prod.stock','>','0')//´roductos que tengan stock
              ->groupBy('producto','prod.id','prod.stock','prod.precio_venta')
              ->get(); 
  
@@ -60,7 +62,7 @@ class VentaController extends Controller
              try{
  
                  DB::beginTransaction();
-                 $mytime= Carbon::now('America/Costa_Rica');
+                 $mytime= Carbon::now('America/Monterrey');
  
                  $venta = new Venta();
                  $venta->idcliente = $request->id_cliente;
@@ -109,12 +111,12 @@ class VentaController extends Controller
  
          public function show($id){
  
-             //dd($id);
-             //dd($request->all());
+             
+            
             
              /*mostrar venta*/
  
-             //$id = $request->id;
+             
              $venta = Venta::join('clientes','ventas.idcliente','=','clientes.id')
              ->join('detalle_ventas','ventas.id','=','detalle_ventas.idventa')
              ->select('ventas.id','ventas.tipo_identificacion',
