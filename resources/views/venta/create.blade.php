@@ -6,11 +6,11 @@
 
  <div class="card-body">
 
- <h2>Agregar Venta</h2>
+ <h2>Modulo de Venta</h2>
 
  <span><strong>(*) Campo obligatorio</strong></span><br/>
 
- <h3 class="text-center">LLenar el formulario</h3>
+ <h3 class="text-center">Ingresa los datos de la venta</h3>
     <!--llamada del metodo store-->
     <form action="{{route('venta.store')}}" method="POST">
     {{csrf_field()}}
@@ -239,7 +239,7 @@
 
                 } else{
 
-                    //alert("La cantidad a vender supera el stock");
+
                 
                     Swal.fire({
                     type: 'error',
@@ -251,7 +251,7 @@
                
             }else{
 
-                //alert("Rellene todos los campos del detalle de la venta");
+           
            
                 Swal.fire({
                 type: 'error',

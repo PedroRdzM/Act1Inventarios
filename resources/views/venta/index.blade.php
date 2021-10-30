@@ -47,9 +47,7 @@
                                     <th>Total (Mxn$)</th>
                                     <th>Impuesto</th>
                                     <th>Estado</th>
-                                    <th>Cambiar Estado</th>
-                                    <th>Descargar Reporte</th>
-                                    
+                                    <th>Cambiar Estado</th>         
                                 </tr>
                             </thead>
                             <tbody>
@@ -112,18 +110,7 @@
                                        
                                     </td>
 
-                                    <td>
-                                       
-                                        <a href="{{url('App\Http\Controllers\pdfVenta',$vent->id)}}" target="_blank">
-                                           
-                                           <button type="button" class="btn btn-info btn-sm">
-                                            
-                                             <i class="fa fa-file fa-2x"></i> Descargar PDF
-                                           </button> &nbsp;
-
-                                        </a> 
-
-                                    </td>
+                                    
                                 </tr>
 
                                 @endforeach

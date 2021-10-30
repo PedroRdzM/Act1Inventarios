@@ -49,7 +49,7 @@
                                     <th>Impuesto</th>
                                     <th>Estado</th>
                                     <th>Cambiar Estado</th>
-                                    <th>Descargar Reporte</th>
+                             
                                     
                                 </tr>
                             </thead>
@@ -115,18 +115,7 @@
                                        
                                     </td>
 
-                                    <td>
-                                       
-                                       <a href="{{url('pdfCompra',$comp->id)}}" target="_blank">
-                                          
-                                          <button type="button" class="btn btn-info btn-sm">
-                                           
-                                            <i class="fa fa-file fa-2x"></i> Descargar PDF
-                                          </button> &nbsp;
-
-                                       </a> 
-
-                                   </td>
+                                   
                                 </tr>
 
                                 @endforeach

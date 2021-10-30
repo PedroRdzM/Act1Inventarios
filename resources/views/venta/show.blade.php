@@ -74,7 +74,7 @@
                     </tr>  
                 </tfoot>
 
-                <tbody>
+                <tbody> 
                    
                    @foreach($detalles as $det)
 
