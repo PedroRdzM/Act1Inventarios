@@ -11,15 +11,15 @@ use DB;
 
 class VentaController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request){//funcion para mostrar el listado de las ventas
       
         if($request){
- 
+            //en la variable sql se almacena lo que se captura en el buscador
             $sql=trim($request->get('buscarTexto'));
             $ventas=Venta::join('clientes','ventas.idcliente','=','clientes.id')//join con la tabla clientes y con la de users
             ->join('users','ventas.idusuario','=','users.id')
             ->join('detalle_ventas','ventas.id','=','detalle_ventas.idventa')
-             ->select('ventas.id','ventas.tipo_identificacion',
+             ->select('ventas.id','ventas.tipo_identificacion',//mostramos la informacion con el select
              'ventas.num_venta','ventas.fecha_venta','ventas.impuesto',
              'ventas.estado','ventas.total','clientes.nombre as cliente','users.nombre')
             ->where('ventas.num_venta','LIKE','%'.$sql.'%')
@@ -37,7 +37,7 @@ class VentaController extends Controller
  
      }
  
-        public function create(){
+        public function create(){//metodo para el formulario para el registro de la venta
  
              /*listar las clientes en ventana modal*/
              $clientes=DB::table('clientes')->get();
@@ -46,12 +46,12 @@ class VentaController extends Controller
              $productos=DB::table('productos as prod')
              ->join('detalle_compras','prod.id','=','detalle_compras.idproducto')
              ->select(DB::raw('CONCAT(prod.codigo," ",prod.nombre) AS producto'),'prod.id','prod.stock','prod.precio_venta')
-             ->where('prod.condicion','=','1')//productos que esten activados
-             ->where('prod.stock','>','0')//´roductos que tengan stock
+             ->where('prod.condicion','=','1')//Muestra productos que esten activados
+             ->where('prod.stock','>','0')//Muestra Productos que tengan stock
              ->groupBy('producto','prod.id','prod.stock','prod.precio_venta')
              ->get(); 
  
- 
+            //reedirecciona los parametros anteriores a la plantilla "create"
              return view('venta.create',["clientes"=>$clientes,"productos"=>$productos]);
   
         }
@@ -60,20 +60,20 @@ class VentaController extends Controller
          
          
              try{
- 
+                //se hace el registro de la venta
                  DB::beginTransaction();
-                 $mytime= Carbon::now('America/Monterrey');
+                 $mytime= Carbon::now('America/Monterrey');//variable para la zona de horarios
  
                  $venta = new Venta();
                  $venta->idcliente = $request->id_cliente;
-                 $venta->idusuario = \Auth::user()->id;
+                 $venta->idusuario = \Auth::user()->id;//se almacena el id del usuario que esté logeado en ese momento
                  $venta->tipo_identificacion = $request->tipo_identificacion;
                  $venta->num_venta = $request->num_venta;
                  $venta->fecha_venta = $mytime->toDateString();
                  $venta->impuesto = "0.20";
                  $venta->total=$request->total_pagar;
                  $venta->estado = 'Registrado';
-                 $venta->save();
+                 $venta->save();//guarda los datos
  
                  $id_producto=$request->id_producto;
                  $cantidad=$request->cantidad;
@@ -140,7 +140,7 @@ class VentaController extends Controller
              return view('venta.show',['venta' => $venta,'detalles' =>$detalles]);
          }
          
-         public function destroy(Request $request){
+         public function destroy(Request $request){//cambia el estado de la venta  a anulado
  
              $venta = Venta::findOrFail($request->id_venta);
              $venta->estado = 'Anulado';

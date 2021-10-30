@@ -20,7 +20,7 @@ class ProveedorController extends Controller
         //
 
         if($request){
-
+            //lista los proveedores en tabla de orden desendente
             $sql=trim($request->get('buscarTexto'));
             $proveedores=DB::table('proveedores')
             ->where('nombre','LIKE','%'.$sql.'%')
@@ -41,9 +41,9 @@ class ProveedorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request)//funcion para registar proveedores
     {
-        //
+        //instancia un objeto proveedor para poder realizar un nuevo registro
         $proveedor= new Proveedor();
         $proveedor->nombre = $request->nombre;
         $proveedor->tipo_documento = $request->tipo_documento;
@@ -52,7 +52,7 @@ class ProveedorController extends Controller
         $proveedor->email = $request->email;
         $proveedor->direccion = $request->direccion;
         $proveedor->save();
-        return Redirect::to("proveedor");
+        return Redirect::to("proveedor");//reedirecciona al formulario proveedor
     }
 
 
@@ -63,9 +63,9 @@ class ProveedorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request)//funcion para editar los proveedores
     {
-        //
+        //encuentra el objeto proveedor mediante el id_proveedor
         $proveedor= Proveedor::findOrFail($request->id_proveedor);
         $proveedor->nombre = $request->nombre;
         $proveedor->tipo_documento = $request->tipo_documento;
@@ -74,7 +74,7 @@ class ProveedorController extends Controller
         $proveedor->email = $request->email;
         $proveedor->direccion = $request->direccion;
         $proveedor->save();
-        return Redirect::to("proveedor");
+        return Redirect::to("proveedor");//reedirecciona a la ventana proveedor
     }
 
 }

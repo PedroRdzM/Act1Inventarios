@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Storage;
 use DB;
 class UserController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request)//funcion para enlistar a los usuarios
     {
         //
         if($request){
-
+            //obtiene los usuarios y elos enlista
             $sql=trim($request->get('buscarTexto'));
             $usuarios=DB::table('users')
-            ->join('roles','users.idrol','=','roles.id')
+            ->join('roles','users.idrol','=','roles.id')//con el join adjuntamos la tabla de roles
             ->select('users.id','users.nombre','users.tipo_documento',
             'users.num_documento','users.direccion','users.telefono',
             'users.email','users.usuario','users.password',

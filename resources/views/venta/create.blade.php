@@ -79,7 +79,7 @@
                                 <!--los productos son enviados  del metodo create mustra el codigo y el nombre del producto concatenados-->
                             <option value="{{$prod->id}}_{{$prod->stock}}_{{$prod->precio_venta}}">{{$prod->producto}}</option>
                                     
-                            @endforeach
+                            @endforeach<!--fin del ciclo-->
 
                             </select>
 
@@ -189,7 +189,7 @@
  <script>
      
   $(document).ready(function(){
-     
+     //llama a la funcion agregar
      $("#agregar").click(function(){
 
          agregar();
@@ -197,22 +197,22 @@
 
   });
 
-   var cont=0;
+   var cont=0;//contador para las filas de los producttos a agregar
    total=0;
    subtotal=[];
-   $("#guardar").hide();
-   $("#id_producto").change(mostrarValores);
+   $("#guardar").hide();//se oculta el boton de guardar para evitar que se guarde una compra sin productos
+   $("#id_producto").change(mostrarValores);//al elegir un producto cambia los valores con la funcion(mostrarValores) deacuerdo al id del producto
 
      function mostrarValores(){
 
          datosProducto = document.getElementById('id_producto').value.split('_');
-         $("#precio_venta").val(datosProducto[2]);
-         $("#stock").val(datosProducto[1]);
+         $("#precio_venta").val(datosProducto[2]);//muestra informacion de la base de datos del precio
+         $("#stock").val(datosProducto[1]);//muestra el stock disponible del producto
      
      }
 
-     function agregar(){
-
+     function agregar(){//funcion para agregar un producto al detalle
+        //toma los datos del formulario
          datosProducto = document.getElementById('id_producto').value.split('_');
 
          id_producto= datosProducto[0];
@@ -222,25 +222,25 @@
          precio_venta= $("#precio_venta").val();
          stock= $("#stock").val();
          impuesto=20;
-          
+          //si el el id, la cantidad  y descuento son distintos a "" o vacios 
           if(id_producto !="" && cantidad!="" && cantidad>0  && descuento!="" && precio_venta!=""){
-
+                //obtenemos el stock y compara si el stock es mayor a cantidad se agrega la fila
                 if(parseInt(stock)>=parseInt(cantidad)){
                     
                     subtotal[cont]=(cantidad*precio_venta)-(cantidad*precio_venta*descuento/100);
-                    total= total+subtotal[cont];
-
+                    total= total+subtotal[cont];//calcula el subtotal del producto
+                    //se agrega la fila con el id del producto y nombre, el precio,cantidad,descuento y subtotal
                     var fila= '<tr class="selected" id="fila'+cont+'"><td><button type="button" class="btn btn-danger btn-sm" onclick="eliminar('+cont+');"><i class="fa fa-times fa-2x"></i></button></td> <td><input type="hidden" name="id_producto[]" value="'+id_producto+'">'+producto+'</td> <td><input type="number" name="precio_venta[]" value="'+parseFloat(precio_venta).toFixed(2)+'"> </td> <td><input type="number" name="descuento[]" value="'+parseFloat(descuento).toFixed(2)+'"> </td> <td><input type="number" name="cantidad[]" value="'+cantidad+'"> </td> <td>$'+parseFloat(subtotal[cont]).toFixed(2)+'</td></tr>';
                     cont++;
-                    limpiar();
-                    totales();  
-                    evaluar();
-                    $('#detalles').append(fila);
+                    limpiar();//llama al metodo limpiar
+                    totales();  //llama al metodo totales
+                    evaluar(); //llama a evaluar
+                    $('#detalles').append(fila);//agrega la fila dentro del id detalles #detalles
 
                 } else{
 
 
-                
+                //si la cantidad  supera el stock se muestra una alerta
                     Swal.fire({
                     type: 'error',
                     
@@ -251,7 +251,7 @@
                
             }else{
 
-           
+           //si hay campos vacios, muestra una alerta
            
                 Swal.fire({
                 type: 'error',
@@ -264,7 +264,7 @@
          
      }
 
-      
+      //limpia el formulario para agregar un detalle del producto
      function limpiar(){
         
         $("#cantidad").val("");
@@ -275,30 +275,30 @@
 
      function totales(){
 
-        $("#total").html("Mnx$ " + total.toFixed(2));
+        $("#total").html("Mnx$ " + total.toFixed(2));//se agrega lo que se tiene en la variable total a #total
     
 
-        total_impuesto=total*impuesto/100;
-        total_pagar=total+total_impuesto;
-        $("#total_impuesto").html("Mnx$ " + total_impuesto.toFixed(2));
+        total_impuesto=total*impuesto/100;//calcula el impuesto
+        total_pagar=total+total_impuesto;//calrula el total
+        $("#total_impuesto").html("Mnx$ " + total_impuesto.toFixed(2));//asigna los valores a los campos en el <span>
         $("#total_pagar_html").html("Mxn$ " + total_pagar.toFixed(2));
         $("#total_pagar").val(total_pagar.toFixed(2));
       }
 
 
-     function evaluar(){
+     function evaluar(){//revisa si el boton de guardar se muestra en el formulario
 
-         if(total>0){
+         if(total>0){//si el total a pagar es mayor a 0 entonces se muestra el boton
 
            $("#guardar").show();
 
-         } else{
+         } else{//en caso que el total sea menor a 0 se oculta el boton de guardar
               
            $("#guardar").hide();
          }
      }
 
-     function eliminar(index){
+     function eliminar(index){//funcion para eliminaruna fila del detalle de la compra
 
         total=total-subtotal[index];
         total_impuesto= total*20/100;
@@ -309,7 +309,7 @@
         $("#total_pagar_html").html("Mxn$" + total_pagar_html);
         $("#total_pagar").val(total_pagar_html.toFixed(2));
         
-        $("#fila" + index).remove();
+        $("#fila" + index).remove();//elimina la fila
         evaluar();
      }
 
